@@ -36,7 +36,8 @@ class RegisterController {
    */
   private async validator(record: object) {
     return await FormRequest.make(record, {
-      username: "required|string|max:255",
+      firstname: "required|string|max:255",
+      lastname: "required|string|max:255",
       email: "required|string|email|max:255",
       password: "required|string|min:8",
     });
@@ -59,7 +60,7 @@ class RegisterController {
         return HttpResponse.UNAUTHORIZED(res, {
           auth: false,
           msg: err.msg,
-          error: err.payload,
+          error: err,
         });
       });
   };

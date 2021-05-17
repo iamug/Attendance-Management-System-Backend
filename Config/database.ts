@@ -83,9 +83,7 @@ export default {
     useNewUrlParser: env("DB_USENEWURLPARSER"),
     useUnifiedTopology: env("DB_USEUNIFIEDTOPOLOGY"),
     connection: {
-      connection_link: `mongodb://${env("DB_USER")}:${env("DB_PASSWORD")}@${env(
-        "DB_HOST",
-      )}:${env("DB_PORT")}/${env("DB_DATABASE")}`,
+      connection_link: "mongodb+srv://alex:12345678900@cluster0.rk5yb.mongodb.net/attendance?retryWrites=true&w=majority",
     },
   },
 
