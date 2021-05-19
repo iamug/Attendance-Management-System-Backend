@@ -55,7 +55,7 @@ class AuthProgram {
     static routeBody() {
         let body = `
     "use strict";
-    const Route = require("@routerManager");
+    import Route from "Elucidate/Route/manager";
     
     /*
     |--------------------------------------------------------------------------
@@ -65,13 +65,12 @@ class AuthProgram {
     | This route handles both login and registration.
     | 
     */
-    
+
     Route.post("/register", "Auth/RegisterController@register");
-    
+
     Route.post("/login", "Auth/LoginController@login");
-    
-    export defaut Route.exec;
-    `;
+
+    module.exports = Route.exec;`;
         return body;
     }
     static async createModel() {
@@ -82,9 +81,7 @@ class AuthProgram {
         if (checkFolder) {
             let doesFileExist = await baseCommand_1.default.checkFileExists("./App/Model/User_model.ts");
             if (doesFileExist == false) {
-                return this.checkDatabaseDriver() == "nosql"
-                    ? await this.nextStep(this.generateNoSqlModel())
-                    : await this.nextStep(this.generateSqlModel());
+                return this.checkDatabaseDriver() == "nosql" ? await this.nextStep(this.generateNoSqlModel()) : await this.nextStep(this.generateSqlModel());
             }
             else {
                 spinner.color = "red";
