@@ -7,9 +7,7 @@ class Kernel {
    * @var array
    */
   static commands() {
-    return [
-      "App/Console/Commands/Testing_command.ts"
-    ];
+    return [];
   }
 
   /**
