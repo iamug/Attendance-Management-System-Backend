@@ -15,6 +15,7 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, required: false },
+  
 });
 
 const User = mongoose.model<UserInterface>("User", UserSchema);
