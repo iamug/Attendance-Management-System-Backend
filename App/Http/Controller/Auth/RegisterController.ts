@@ -3,6 +3,7 @@ import FormRequest from "Elucidate/Validator/FormRequest";
 import { Request, Response } from "Elucidate/HttpContext";
 import HttpResponse from "Elucidate/HttpContext/ResponseType";
 import Authenticator from "Elucidate/Auth/Authenticator";
+import EmailJob from "App/Jobs/Email_job";
 
 class RegisterController {
   protected Auth: Authenticator;
@@ -60,6 +61,17 @@ class RegisterController {
           email: user.email,
           avatar: user.avatar,
         };
+        let payload = {
+          client_name: user.firstname + " " + user.lastname,
+          sender_name: 'FPG Hub',
+          to: user.email,
+          template: "Register_user",
+          from: "thehub@flexipgroup.com",
+          subject: 'Welcome onboard'
+        }
+
+        new EmailJob().dispatch(payload);
+        
         return HttpResponse.OK(res, {
           auth: true,
           token: token,

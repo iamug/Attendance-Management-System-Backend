@@ -14,6 +14,8 @@
     Route.post("/register", "Auth/RegisterController@register");
     
     Route.post("/login", "Auth/LoginController@login");
+
+    Route.post("/reset-password", "Auth/ResetPasswordController@reset");
     
     module.exports = Route.exec;
     
