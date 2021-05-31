@@ -1,31 +1,19 @@
 "use strict";
-import IClockInService from "App/Service/ClockIn/IClockInService";
+import IActivityService from "App/Service/Activities/IActivityService";
 import { Request, Response, NextFunction } from "Elucidate/HttpContext";
 import HttpResponse from "Elucidate/HttpContext/ResponseType";
-import HomePageClockin from "App/Http/Requests/HomePageClockinout_request";
 
-class ClockInController {
-  protected clockInService: IClockInService;
-  constructor(ClockInService: IClockInService) {
-    this.clockInService = ClockInService;
+class UserActivityController {
+  protected ActivityService: IActivityService;
+  constructor(ActivityService: IActivityService) {
+    this.ActivityService = ActivityService;
   }
   /**
-   * Dashboard clockin
-   * @Method POST
-   * @API api/clockin
-   * @return Response
+   * Display a listing of the resource.
    */
-  saveLocation = async (req: Request, res: Response, next: NextFunction) => {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let validate = await req.validate(req.body, {
-        location: {
-          long: "required|numeric",
-          lat: "required|numeric",
-        },
-      });
-      if (!validate["success"]) return HttpResponse.BAD_REQUEST(res, validate);
-      return await this.clockInService
-        .getLocation(req.user["_id"], validate["data"]["location"])
+      return await this.ActivityService.getUserActivities(req.user["_id"])
         .then((result) => {
           return HttpResponse.OK(res, result);
         })
@@ -38,27 +26,13 @@ class ClockInController {
   };
 
   /**
-   * Homepage clockin.
+   * Show the form for creating a new resource.
    *
-   * @Method POST
-   * @API api/clockin/homepage
    * @return Response
    */
-  homePageClockin = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let validate = await HomePageClockin.validate(req.body);
-      if (!validate["success"]) return HttpResponse.BAD_REQUEST(res, validate);
-      return await this.clockInService
-        .homePageClockin(
-          validate["data"]["email"],
-          validate["data"]["location"]
-        )
-        .then((result) => {
-          return HttpResponse.OK(res, result);
-        })
-        .catch((err) => {
-          return HttpResponse.EXPECTATION_FAILED(res, err);
-        });
+      //
     } catch (error) {
       return next(error);
     }
@@ -131,4 +105,4 @@ class ClockInController {
   };
 }
 
-export default ClockInController;
+export default UserActivityController;

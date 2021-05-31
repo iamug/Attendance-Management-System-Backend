@@ -2,10 +2,10 @@ interface IClockInService {
   getLocation(
     user_id: string,
     location: { long: string; lat: string }
-  ): Promise<Boolean>;
+  ): Promise<boolean>;
   homePageClockin(
     email: string,
     location: { long: string; lat: string }
-  ): Promise<String>;
+  ): Promise<string>;
 }
 export default IClockInService;

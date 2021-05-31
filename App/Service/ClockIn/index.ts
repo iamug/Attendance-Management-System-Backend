@@ -11,7 +11,7 @@ class ClockInService implements IClockInService {
   homePageClockin = async (
     email: string,
     location: { long: string; lat: string }
-  ): Promise<String> => {
+  ): Promise<string> => {
     return await new Promise(async (resolve, reject) => {
       try {
         let emailCheck = await this.userService.getUserIdByEmail(email);
@@ -30,7 +30,7 @@ class ClockInService implements IClockInService {
   async getLocation(
     user_id: string,
     location: { long: string; lat: string }
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     return await new Promise(async (resolve, reject) => {
       return await new ClockInRepository()
         .create({ user: user_id, location })

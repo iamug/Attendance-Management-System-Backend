@@ -1,7 +1,7 @@
 "use strict";
 import FormRequest from "Elucidate/Validator/FormRequest";
 
-class HomePageClockin {
+class HomePageClockinout {
   /**
    * Handle the request validation.
    * @param {*} data | e.g request body
@@ -17,4 +17,4 @@ class HomePageClockin {
   }
 }
 
-export default new HomePageClockin();
+export default new HomePageClockinout();
