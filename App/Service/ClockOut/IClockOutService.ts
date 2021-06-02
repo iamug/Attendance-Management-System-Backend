@@ -7,5 +7,6 @@ interface IClockOutService {
     email: string,
     location: { long: string; lat: string }
   ): Promise<String>;
+  checkClockOut(user: string): Promise<Boolean>;
 }
 export default IClockOutService;

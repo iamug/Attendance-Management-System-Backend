@@ -27,26 +27,6 @@ class ActivityService implements IActivityService {
       }
     });
   }
-
-  private formatData(data1: object | object[], data2: object | object[]) {
-    // cars = [{ make: 'audi', model: 'r8', year: '2012' }, { make: 'audi', model: 'rs5', year: '2013' }, { make: 'ford', model: 'mustang', year: '2012' }, { make: 'ford', model: 'fusion', year: '2015' }, { make: 'kia', model: 'optima', year: '2012' }],
-
-    // let result = newData.reduce(function (r, a) {
-    //     r[ new Date(a.createdAt).toDateString()] = r[ new Date(a.createdAt).toDateString()]  || [];
-    //     r[a.createdAt].push(a);
-    //     return r;
-    // }, Object.create(null));
-
-    let returnData = [];
-    for (let i in data1) {
-      returnData.push(data1[i]);
-    }
-
-    for (let i in data2) {
-      returnData.push(data2[i]);
-    }
-    return returnData;
-  }
 }
 
 export default ActivityService;
