@@ -44,6 +44,7 @@ class LoginController {
           email: user.email,
           avatar: user.avatar,
         };
+        
         let payload = {
           client_name: user.firstname + " " + user.lastname,
           sender_name: 'FPG Hub',

@@ -17,5 +17,7 @@
 
     Route.post("/reset-password", "Auth/ResetPasswordController@reset");
     
+    Route.post("/update-password", "Auth/ResetPasswordController@updatePassword");
+    
     module.exports = Route.exec;
     
