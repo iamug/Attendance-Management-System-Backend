@@ -1,1 +1,2 @@
 [2021-05-26T14:40:21.261] [ERROR] file - [Service/Clockin] message - [User email not found] { status: false, data: 'User does not exist' }
+[2021-06-01T08:19:22.355] [ERROR] file - [Service/ClockOut] message - [User email not found] You have not clocked in for today

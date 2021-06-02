@@ -7,5 +7,6 @@ interface IClockInService {
     email: string,
     location: { long: string; lat: string }
   ): Promise<string>;
+  checkClockIn(user: string): Promise<Boolean>;
 }
 export default IClockInService;

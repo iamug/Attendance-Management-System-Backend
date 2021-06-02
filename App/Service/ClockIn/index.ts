@@ -16,6 +16,8 @@ class ClockInService implements IClockInService {
       try {
         let emailCheck = await this.userService.getUserIdByEmail(email);
         if (!emailCheck["status"]) reject("User not found");
+        if (await this.checkClockIn(emailCheck["data"]))
+          reject("You have already clocked in for today");
         let saveLocation = await this.getLocation(emailCheck["data"], location);
         if (!saveLocation)
           reject(
@@ -42,6 +44,19 @@ class ClockInService implements IClockInService {
           reject(false);
         });
     });
+  }
+  async checkClockIn(user: string): Promise<Boolean> {
+    const startDate = new Date(new Date().setHours(0, 0, 0, 0));
+    const endDate = new Date();
+    const query = { user, createdAt: { $gte: startDate, $lt: endDate } };
+    let clockInData;
+    try {
+      clockInData = await new ClockInRepository().findOne(query);
+    } catch (error) {
+      return false;
+    }
+    if (clockInData[0]) return true;
+    return false;
   }
 }
 

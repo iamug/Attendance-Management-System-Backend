@@ -2,11 +2,13 @@ import ClockOutRepository from "App/Repository/ClockOutRepository";
 import IClockOutService from "./IClockOutService";
 import LOG from "Elucidate/Log";
 import IUserService from "../User/IUserService";
-import ClockInRepository from "App/Repository/ClockInRepository";
+import IClockInService from "../ClockIn/IClockInService";
 class ClockOutService implements IClockOutService {
   protected userService: IUserService;
-  constructor(UserService: IUserService) {
+  protected clockInService: IClockInService;
+  constructor(UserService: IUserService, ClockInService: IClockInService) {
     this.userService = UserService;
+    this.clockInService = ClockInService;
   }
 
   homePageClockOut = async (
@@ -20,8 +22,12 @@ class ClockOutService implements IClockOutService {
           reject("User not found");
           return;
         }
-        let checkClockIn = await this.checkClockIn(emailCheck["data"]);
+        let checkClockIn = await this.clockInService.checkClockIn(
+          emailCheck["data"]
+        );
         if (!checkClockIn) reject("You have not clocked in for today");
+        let checkClockOut = await this.checkClockOut(emailCheck["data"]);
+        if (!checkClockOut) reject("You have already clocked out for today");
         let saveLocation = await this.dashboardClockOut(
           emailCheck["data"],
           location
@@ -41,6 +47,10 @@ class ClockOutService implements IClockOutService {
     location: { long: string; lat: string }
   ): Promise<Boolean> {
     return await new Promise(async (resolve, reject) => {
+      if (!(await this.clockInService.checkClockIn(user_id)))
+        reject("You have not clocked in for today");
+      if (!(await this.checkClockOut(user_id)))
+        reject("You have already clocked out for today");
       return await new ClockOutRepository()
         .create({ user: user_id, location })
         .then(() => {
@@ -52,17 +62,17 @@ class ClockOutService implements IClockOutService {
         });
     });
   }
-  async checkClockIn(user: string): Promise<Boolean> {
+  async checkClockOut(user: string): Promise<Boolean> {
     const startDate = new Date(new Date().setHours(0, 0, 0, 0));
     const endDate = new Date();
     const query = { user, createdAt: { $gte: startDate, $lt: endDate } };
-    let clockInData;
+    let clockOutData;
     try {
-      clockInData = await new ClockInRepository().findOne(query);
+      clockOutData = await new ClockOutRepository().findOne(query);
     } catch (error) {
       return false;
     }
-    if (clockInData[0]) return true;
+    if (clockOutData[0]) return true;
     return false;
   }
 }
