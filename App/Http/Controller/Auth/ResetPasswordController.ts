@@ -29,7 +29,7 @@ class ResetPasswordController {
   };
 
   private processReset = async (data: object, res: Response) => {
-    let userDetails = await this.userService.getUserIdByEmail(data["email"]);
+    let userDetails = await this.userService.getUserByEmail(data["email"]);
     if (!userDetails["status"]) {
       return HttpResponse.BAD_REQUEST(res, {
         error: true,
