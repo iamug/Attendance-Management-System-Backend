@@ -6,6 +6,7 @@ import HttpResponse from "Elucidate/HttpContext/ResponseType";
 import FormRequest from "Elucidate/Validator/FormRequest";
 import IPasswordResetService from "App/Service/PasswordReset/IPasswordResetService";
 import Hash from "Elucidate/Hashing/Hash";
+import PasswordResetRepository from "App/Repository/PasswordResetRepository";
 
 class ResetPasswordController {
   protected userService: IUserService;
@@ -37,7 +38,7 @@ class ResetPasswordController {
     }
     let hash = await Hash.make(userDetails["data"].email);
     console.log("hash to PR table  ", hash);
-    
+
     let payload = {
       client_name: "",
       sender_name: "FPG Hub",
@@ -75,20 +76,25 @@ class ResetPasswordController {
     let hash = await Hash.make(data["body"].password);
     console.log("hash from DB  ", getUser["data"].hash);
     console.log("hash from frontend", data["body"].token);
-    
+
     if (getUser["data"].hash === data["body"].token) {
-      const userUpdate = await this.userService.updateUserByEmail(data["body"].email, hash);
+      const userUpdate = await this.userService.updateUserByEmail(
+        data["body"].email,
+        hash
+      );
       console.log(userUpdate);
+      await new PasswordResetRepository().deleteWhere({
+        email: data["body"].email,
+      });
       return HttpResponse.OK(res, {
         error: false,
         message: "Password updated successfully",
       });
-    }
-    else{
+    } else {
       return HttpResponse.BAD_REQUEST(res, {
         error: true,
         message: "Invalid Authentication",
-      }); 
+      });
     }
   };
 
