@@ -34,6 +34,7 @@ class ClockInService implements IClockInService {
     location: { long: string; lat: string }
   ): Promise<boolean> {
     return await new Promise(async (resolve, reject) => {
+      if (await this.checkClockIn(user_id)) return reject(false);
       return await new ClockInRepository()
         .create({ user: user_id, location })
         .then(() => {
