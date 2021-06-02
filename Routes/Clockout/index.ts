@@ -11,6 +11,7 @@ import { Request, Response, NextFunction } from "Elucidate/HttpContext";
 
 Route.group("/clockout", () => {
   Route.post("/", "ClockOutController@dashboardClockout", ["auth"]);
+  Route.get("/check", "ClockOutController@checkClockOut", ["auth"]);
   Route.post("/homepage", "ClockOutController@homePageClockout");
 });
 

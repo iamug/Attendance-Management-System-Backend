@@ -14,29 +14,25 @@ class ClockOutService implements IClockOutService {
   homePageClockOut = async (
     email: string,
     location: { long: string; lat: string }
-  ): Promise<String> => {
+  ): Promise<string> => {
     return await new Promise(async (resolve, reject) => {
       try {
-        let emailCheck = await this.userService.getUserIdByEmail(email);
-        if (!emailCheck["status"]) {
-          reject("User not found");
-          return;
-        }
-        let checkClockIn = await this.clockInService.checkClockIn(
-          emailCheck["data"]
-        );
-        if (!checkClockIn) reject("You have not clocked in for today");
-        let checkClockOut = await this.checkClockOut(emailCheck["data"]);
-        if (!checkClockOut) reject("You have already clocked out for today");
-        let saveLocation = await this.dashboardClockOut(
-          emailCheck["data"],
-          location
-        );
+        let emailCheck = await this.userService.getUserByEmail(email);
+        if (!emailCheck["status"]) return reject("User not found");
+        let id = emailCheck["data"]["id"];
+        let name = emailCheck["data"]["fullname"];
+        let checkClockIn = await this.clockInService.checkClockIn(id);
+        if (!checkClockIn)
+          return reject(`Hi ${name}, You have not clocked in for today.`);
+        let checkClockOut = await this.checkClockOut(id);
+        if (checkClockOut)
+          return reject(`Hi ${name}, You have already clocked out for today.`);
+        let saveLocation = await this.dashboardClockOut(id, location);
         if (!saveLocation)
-          reject(
-            "Oops. Something went wrong. Our engineers are working on it."
+          return reject(
+            `Hi ${name}, Something went wrong. Our engineers are working on it.`
           );
-        resolve("You've successfully clocked out.");
+        resolve(`Hi ${name}, You've successfully clocked out for today.`);
       } catch (error) {
         LOG.error("Service/ClockOut", "User email not found", error);
       }
@@ -45,16 +41,19 @@ class ClockOutService implements IClockOutService {
   async dashboardClockOut(
     user_id: string,
     location: { long: string; lat: string }
-  ): Promise<Boolean> {
+  ): Promise<string> {
     return await new Promise(async (resolve, reject) => {
+      let userCheck = await this.userService.getUserNameById(user_id);
+      if (!userCheck["status"]) return reject("User not found");
+      let name = userCheck["data"]["fullname"];
       if (!(await this.clockInService.checkClockIn(user_id)))
-        reject("You have not clocked in for today");
-      if (!(await this.checkClockOut(user_id)))
-        reject("You have already clocked out for today");
+        return reject(`Hi ${name}, You have not clocked in for today.`);
+      if (await this.checkClockOut(user_id))
+        return reject(`Hi ${name}, You have already clocked out for today.`);
       return await new ClockOutRepository()
         .create({ user: user_id, location })
         .then(() => {
-          resolve(true);
+          resolve(`Hi ${name}, You've successfully clocked out for today.`);
         })
         .catch((err) => {
           LOG.error("Service/ClockOut", "error while saving location", err);

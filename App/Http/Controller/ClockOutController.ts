@@ -11,9 +11,9 @@ class ClockOutController {
   }
 
   /**
-   * Dashboard clockin
+   * Dashboard clockout
    * @Method POST
-   * @API api/clockin
+   * @API api/clockout
    * @return Response
    */
   dashboardClockout = async (
@@ -62,6 +62,28 @@ class ClockOutController {
           validate["data"]["email"],
           validate["data"]["location"]
         )
+        .then((result) => {
+          return HttpResponse.OK(res, result);
+        })
+        .catch((err) => {
+          return HttpResponse.EXPECTATION_FAILED(res, err);
+        });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  /**
+   * Dashboard Check Clock out for current day
+   *
+   * @Method GET
+   * @API api/clockout/check
+   * @return Response
+   */
+  checkClockOut = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      return await this.clockOutService
+        .checkClockOut(req.user["_id"])
         .then((result) => {
           return HttpResponse.OK(res, result);
         })

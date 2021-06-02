@@ -1,2 +1,6 @@
 [2021-05-26T14:40:21.261] [ERROR] file - [Service/Clockin] message - [User email not found] { status: false, data: 'User does not exist' }
 [2021-06-01T08:19:22.355] [ERROR] file - [Service/ClockOut] message - [User email not found] You have not clocked in for today
+[2021-06-02T12:21:50.448] [ERROR] file - [Service/ClockOut] message - [User email not found] You have not clocked in for today
+[2021-06-02T12:53:54.053] [ERROR] file - [Service/Clockin] message - [User email not found]
+[2021-06-02T12:55:32.394] [ERROR] file - [Service/Clockin] message - [User email not found]
+[2021-06-02T12:57:08.271] [ERROR] file - [Service/ClockOut] message - [User email not found] You have already clocked out for today
