@@ -11,6 +11,7 @@ import { Request, Response, NextFunction } from "Elucidate/HttpContext";
 
 Route.group("/clockin", () => {
   Route.post("/", "ClockInController@saveLocation", ["auth"]);
+  Route.get("/check", "ClockInController@checkClockIn", ["auth"]);
   Route.post("/homepage", "ClockInController@homePageClockin");
 });
 

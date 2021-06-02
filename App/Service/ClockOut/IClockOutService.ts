@@ -2,11 +2,11 @@ interface IClockOutService {
   dashboardClockOut(
     user_id: string,
     location: { long: string; lat: string }
-  ): Promise<Boolean>;
+  ): Promise<string>;
   homePageClockOut(
     email: string,
     location: { long: string; lat: string }
-  ): Promise<String>;
+  ): Promise<string>;
   checkClockOut(user: string): Promise<Boolean>;
 }
 export default IClockOutService;

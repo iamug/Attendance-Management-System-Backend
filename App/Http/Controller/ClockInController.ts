@@ -65,13 +65,22 @@ class ClockInController {
   };
 
   /**
-   * Store a newly created resource in storage.
-   * @param  Request
+   * Dashboard Check Clock in for current day
+   *
+   * @Method GET
+   * @API api/clockin/check
    * @return Response
    */
-  store = async (req: Request, res: Response, next: NextFunction) => {
+  checkClockIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      //
+      return await this.clockInService
+        .checkClockIn(req.user["_id"])
+        .then((result) => {
+          return HttpResponse.OK(res, result);
+        })
+        .catch((err) => {
+          return HttpResponse.EXPECTATION_FAILED(res, err);
+        });
     } catch (error) {
       return next(error);
     }
