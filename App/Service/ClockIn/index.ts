@@ -14,16 +14,18 @@ class ClockInService implements IClockInService {
   ): Promise<string> => {
     return await new Promise(async (resolve, reject) => {
       try {
-        let emailCheck = await this.userService.getUserIdByEmail(email);
-        if (!emailCheck["status"]) reject("User not found");
-        if (await this.checkClockIn(emailCheck["data"]))
-          reject("You have already clocked in for today");
-        let saveLocation = await this.getLocation(emailCheck["data"], location);
+        let userCheck = await this.userService.getUserNameByEmail(email);
+        if (!userCheck["status"]) return reject("User not found");
+        let id = userCheck["data"]["id"];
+        let name = userCheck["data"]["fullname"];
+        if (await this.checkClockIn(id))
+          return reject(`Hi ${name}, You have already clocked in for today`);
+        let saveLocation = await this.getLocation(id, location);
         if (!saveLocation)
-          reject(
-            "Oops. Something went wrong. Our engineers are working on it."
+          return reject(
+            `Hi ${name}, Something went wrong. Our engineers are working on it.`
           );
-        resolve("You've successfully clocked in.");
+        return resolve(`Hi ${name}, You've successfully clocked in for today.`);
       } catch (error) {
         LOG.error("Service/Clockin", "User email not found", error);
       }
@@ -32,13 +34,19 @@ class ClockInService implements IClockInService {
   async getLocation(
     user_id: string,
     location: { long: string; lat: string }
-  ): Promise<boolean> {
+  ): Promise<string> {
     return await new Promise(async (resolve, reject) => {
-      if (await this.checkClockIn(user_id)) return reject(false);
+      let userCheck = await this.userService.getUserNameById(user_id);
+      if (!userCheck["status"]) return reject("User not found");
+      let name = userCheck["data"]["fullname"];
+      if (await this.checkClockIn(user_id))
+        return reject(`Hi ${name}, You have already clocked in for today`);
       return await new ClockInRepository()
         .create({ user: user_id, location })
         .then(() => {
-          resolve(true);
+          return resolve(
+            `Hi ${name}, You've successfully clocked in for today.`
+          );
         })
         .catch((err) => {
           LOG.error("Service/ClockIn", "error while saving location", err);
