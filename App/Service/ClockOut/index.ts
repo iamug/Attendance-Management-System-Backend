@@ -17,7 +17,7 @@ class ClockOutService implements IClockOutService {
   ): Promise<string> => {
     return await new Promise(async (resolve, reject) => {
       try {
-        let emailCheck = await this.userService.getUserByEmail(email);
+        let emailCheck = await this.userService.getUserNameByEmail(email);
         if (!emailCheck["status"]) return reject("User not found");
         let id = emailCheck["data"]["id"];
         let name = emailCheck["data"]["fullname"];
