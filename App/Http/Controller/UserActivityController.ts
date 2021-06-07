@@ -26,13 +26,32 @@ class UserActivityController {
   };
 
   /**
-   * Show the form for creating a new resource.
+   * Filter user activiites by startdate and enddate
    *
    * @return Response
    */
-  create = async (req: Request, res: Response, next: NextFunction) => {
+  filterActivities = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      //
+      let validate = await req.validate(req.body, {
+        startDate: "required|date",
+        endDate: "date",
+      });
+      if (!validate["success"]) return HttpResponse.BAD_REQUEST(res, validate);
+      return await this.ActivityService.filterUserActivites(
+        req.user["_id"],
+        validate["data"]["startDate"],
+        validate["data"]["endDate"] || new Date()
+      )
+        .then((result) => {
+          return HttpResponse.OK(res, result);
+        })
+        .catch((err) => {
+          return HttpResponse.EXPECTATION_FAILED(res, err);
+        });
     } catch (error) {
       return next(error);
     }

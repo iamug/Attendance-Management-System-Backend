@@ -11,6 +11,7 @@ import { Request, Response, NextFunction } from "Elucidate/HttpContext";
 
 Route.group("/activities", () => {
   Route.get("/", "UserActivityController@getAll", ["auth"]);
+  Route.post("/filter", "UserActivityController@filterActivities", ["auth"]);
 });
 
 //--------------------------------------------------------------------------
