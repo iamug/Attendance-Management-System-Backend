@@ -2,6 +2,9 @@ import PasswordResetRepository from "App/Repository/PasswordResetRepository";
 import IPasswordResetService from "./IPasswordResetService";
 import LOG from "Elucidate/Log";
 import IUserService from "../User/IUserService";
+import EmailJob from "App/Jobs/Email_job";
+import Hash from "Elucidate/Hashing/Hash";
+
 class PasswordResetService implements IPasswordResetService {
   protected userService: IUserService;
   constructor(UserService: IUserService) {
@@ -36,6 +39,37 @@ class PasswordResetService implements IPasswordResetService {
         reject({ status: false, data: error });
       }
     });
+  }
+  async sendResetEmail(email: string){
+    let hash = await Hash.make(email);
+    console.log("hash to PR table  ", hash);
+
+    let payload = {
+      client_name: "",
+      sender_name: "FPG Hub",
+      to: email,
+      template: "Password_reset",
+      from: "thehub@flexipgroup.com",
+      subject: "Password Reset",
+      body: "bodt",
+      token: `http://localhost:3000/update-password?token=${hash}&email=${email}`,
+    };
+
+    try {
+      const response = await this.createResetToken(
+        email,
+        hash,
+        "60"
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+    new EmailJob().dispatch(payload);
+  }
+  async sendRegistrationEmail(payload: object){
+    new EmailJob().dispatch(payload);
   }
 }
 

@@ -4,12 +4,18 @@ import { Request, Response } from "Elucidate/HttpContext";
 import HttpResponse from "Elucidate/HttpContext/ResponseType";
 import Authenticator from "Elucidate/Auth/Authenticator";
 import EmailJob from "App/Jobs/Email_job";
+import IPasswordResetService from "App/Service/PasswordReset/IPasswordResetService";
 
 class RegisterController {
   protected Auth: Authenticator;
+  protected passwordResetService: IPasswordResetService;
 
-  constructor(Authenticator: Authenticator) {
+  constructor(
+    Authenticator: Authenticator,
+    PasswordResetService: IPasswordResetService
+  ) {
     this.Auth = Authenticator;
+    this.passwordResetService = PasswordResetService;
   }
 
   /*
@@ -63,15 +69,15 @@ class RegisterController {
         };
         let payload = {
           client_name: user.firstname + " " + user.lastname,
-          sender_name: 'FPG Hub',
+          sender_name: "FPG Hub",
           to: user.email,
           template: "Register_user",
           from: "thehub@flexipgroup.com",
-          subject: 'Welcome onboard'
-        }
+          subject: "Welcome onboard",
+        };
 
-        new EmailJob().dispatch(payload);
-        
+        this.passwordResetService.sendRegistrationEmail(payload);
+
         return HttpResponse.OK(res, {
           auth: true,
           token: token,

@@ -1,5 +1,4 @@
 "use strict";
-import EmailJob from "App/Jobs/Email_job";
 import IUserService from "App/Service/User/IUserService";
 import { Request, Response, NextFunction } from "Elucidate/HttpContext";
 import HttpResponse from "Elucidate/HttpContext/ResponseType";
@@ -36,32 +35,7 @@ class ResetPasswordController {
         message: "User not found",
       });
     }
-    let hash = await Hash.make(userDetails["data"].email);
-    console.log("hash to PR table  ", hash);
-
-    let payload = {
-      client_name: "",
-      sender_name: "FPG Hub",
-      to: userDetails["data"].email,
-      template: "Password_reset",
-      from: "thehub@flexipgroup.com",
-      subject: "Password Reset",
-      body: "bodt",
-      token: `localhost:3000/update-password?token=${hash}&email=${userDetails["data"].email}`,
-    };
-
-    try {
-      const response = await this.passwordResetService.createResetToken(
-        userDetails["data"].email,
-        hash,
-        "60"
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-
-    new EmailJob().dispatch(payload);
+    this.passwordResetService.sendResetEmail(data["email"]);
 
     return HttpResponse.OK(res, {
       error: false,
@@ -74,15 +48,13 @@ class ResetPasswordController {
       data["body"].email
     );
     let hash = await Hash.make(data["body"].password);
-    console.log("hash from DB  ", getUser["data"].hash);
-    console.log("hash from frontend", data["body"].token);
 
     if (getUser["data"].hash === data["body"].token) {
-      const userUpdate = await this.userService.updateUserByEmail(
+      await this.userService.updateUserByEmail(
         data["body"].email,
         hash
       );
-      console.log(userUpdate);
+
       await new PasswordResetRepository().deleteWhere({
         email: data["body"].email,
       });
