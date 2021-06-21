@@ -1,8 +1,9 @@
 /**
  * @swagger
  * tags:
- *  name: Clockout
- *  description: Clockout api documentation
+ *   name: clockout
+ *   description: Clockout api documentation
+ *
  *
  */
 
@@ -12,36 +13,38 @@
  * @swagger
  * path:
  * /clockout:
- *  post:
- *      security:
- *          - bearerAuth: []
- *      summary: clockout authenticated user from the dashboard
- *      tags: [Clockout]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref : "#/components/schemas/clockoutrequest"
- *      responses:
- *          "200":
- *              Content:
+ *      post:
+ *          summary: clockout authenticated user from the dashboard
+ *          tags: [clockout]
+ *          security:
+ *              - bearerAuth: []
+ *          requestBody:
+ *              required: true
+ *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: "#/components/schemas/clockoutresponse"
+ *                          $ref : "#/components/schemas/clockoutrequest"
+ *          responses:
+ *              "200":
+ *                  Content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/clockoutresponse"
  *
  * /clockout/check:
- *  post:
- *      security:
- *         - bearerAuth: []
- *      summary: check if user has clocked out for current day
- *      tags: [Clockout]
- *        responses:
- *          "200":
- *              Content:
- *                  application/json:
- *                      schema:
- *                          $ref: "#/components/schemas/clockoutresponse"
+ *      get:
+ *          summary: check if user has clocked out for current day
+ *          tags: [Clockout]
+ *          responses:
+ *              "200":
+ *                  Content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/clockoutresponse"
+ *          security:
+ *              - bearerAuth: []
+ *
+ *
  *
  */
 
