@@ -1,0 +1,24 @@
+{
+    "definition": {
+      "openapi": "3.0.n",
+      "info": {
+        "title": "Attendance System API Documentation",
+        "version": "0.1.0",
+        "description":
+          "Attendance System API docs with ExpressWebJs and documented with Swagger",
+        "license": {
+          "name": "MIT",
+          "url": "https://spdx.org/licenses/MIT.html"
+        },
+        "contact": {
+          "name": ""
+        }
+      },
+      "servers": [
+        {
+          "url": "http://localhost:5100/api"
+        }
+      ]
+    },
+    "apis": ["./Docs/*.ts"]
+  }
