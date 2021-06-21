@@ -34,15 +34,33 @@
  * /clockout/check:
  *      get:
  *          summary: check if user has clocked out for current day
- *          tags: [Clockout]
+ *          tags: [clockout]
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              "200":
  *                  Content:
  *                      application/json:
  *                          schema:
  *                              $ref: "#/components/schemas/clockoutresponse"
- *          security:
- *              - bearerAuth: []
+ *
+ *
+ * /clockout/homepage:
+ *      post:
+ *          summary: clockout authenticated user from homepage
+ *          tags: [clockout]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref : "#/components/schemas/clockoutrequest"
+ *          responses:
+ *              "200":
+ *                  Content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/clockoutresponse"
  *
  *
  *
