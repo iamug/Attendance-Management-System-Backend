@@ -12,5 +12,7 @@
       "Utils/*":["./Utils/*"],
       "Elucidate/*":["./node_modules/expresswebcorets/lib/*"],
     },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
   }
 }

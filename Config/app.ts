@@ -80,6 +80,7 @@ export default {
      */
     "App/Providers/AppServiceProvider::class",
     "App/Providers/RouteServiceProvider::class",
+    "App/Providers/SwaggerServiceProvider::class",
     //"App/Providers/SocketServiceProvider::class",
   ],
 };
