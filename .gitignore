@@ -25,7 +25,7 @@ yarn-error.log*
 node_modules
 
 #docs
-/docs/*
+#/docs/*
 
 
 #uncompleted pages
