@@ -2,6 +2,8 @@ import { Request, Response } from "Elucidate/HttpContext";
 import HttpResponse from "Elucidate/HttpContext/ResponseType";
 import FormRequest from "Elucidate/Validator/FormRequest";
 import Authenticator from "Elucidate/Auth/Authenticator";
+import RequestDTO from "DTO/Auth/loginRequestDTO";
+import ResponseDTO from "DTO/Auth/responseDTO";
 
 class LoginController {
   protected Auth: Authenticator;
@@ -21,7 +23,7 @@ class LoginController {
   login = async (req: Request, res: Response) => {
     let validation = await this.validator(req.body);
     if (validation.success) {
-      return await this.processLogin(req.body, res);
+      return await this.processLogin(new RequestDTO(req.body), res);
     } else {
       return HttpResponse.BAD_REQUEST(res, validation);
     }
@@ -37,18 +39,14 @@ class LoginController {
     return await this.Auth.processLogin(data)
       .then(async (user: any) => {
         let token = await this.Auth.generateToken(user);
-        let userDetails = {
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          avatar: user.avatar,
-        };
-        
-        return HttpResponse.OK(res, {
-          auth: true,
-          token: token,
-          user: userDetails,
-        });
+        return HttpResponse.OK(
+          res,
+          new ResponseDTO({
+            auth: true,
+            token: token,
+            user,
+          })
+        );
       })
       .catch((err: { msg: any; payload: any }) => {
         return HttpResponse.UNAUTHORIZED(res, {

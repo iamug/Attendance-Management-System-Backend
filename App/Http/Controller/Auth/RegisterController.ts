@@ -5,6 +5,8 @@ import HttpResponse from "Elucidate/HttpContext/ResponseType";
 import Authenticator from "Elucidate/Auth/Authenticator";
 import EmailJob from "App/Jobs/Email_job";
 import IPasswordResetService from "App/Service/PasswordReset/IPasswordResetService";
+import ResponseDTO from "DTO/Auth/responseDTO";
+import RegisterRequestDTO from "DTO/Auth/registerRequestDTO";
 
 class RegisterController {
   protected Auth: Authenticator;
@@ -30,7 +32,7 @@ class RegisterController {
   register = async (req: Request, res: Response) => {
     let validation = await this.validator(req.body);
     if (validation.success) {
-      return await this.create(req.body, res);
+      return await this.create(new RegisterRequestDTO(validation.data), res);
     } else {
       return HttpResponse.BAD_REQUEST(res, validation);
     }
@@ -61,12 +63,6 @@ class RegisterController {
     return await this.Auth.createUser(data)
       .then(async (user: any) => {
         let token = await this.Auth.generateToken(user);
-        let userDetails = {
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          avatar: user.avatar,
-        };
         let payload = {
           client_name: user.firstname + " " + user.lastname,
           sender_name: "FPG Hub",
@@ -78,11 +74,14 @@ class RegisterController {
 
         this.passwordResetService.sendRegistrationEmail(payload);
 
-        return HttpResponse.OK(res, {
-          auth: true,
-          token: token,
-          user: userDetails,
-        });
+        return HttpResponse.OK(
+          res,
+          new ResponseDTO({
+            auth: true,
+            token: token,
+            user,
+          })
+        );
       })
       .catch((err: { msg: any; payload: any }) => {
         return HttpResponse.UNAUTHORIZED(res, {
