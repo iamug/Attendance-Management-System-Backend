@@ -22,13 +22,13 @@ export default {
       database: env("DB_DATABASE"),
     },
     migrations: {
-      directory: path.join(__dirname, '../Database/Migrations/'),
+      directory: path.join(__dirname, "../Database/Migrations/"),
       tableName: "migrations",
-      stub:  path.join(__dirname, '../Database/Migrations/migrationLayout.stub'),
-      extension: 'ts'
+      stub: path.join(__dirname, "../Database/Migrations/migrationLayout.stub"),
+      extension: "ts",
     },
     seeds: {
-      directory:  path.join(__dirname, '../Database/Seeds/'),
+      directory: path.join(__dirname, "../Database/Seeds/"),
     },
   },
   /*
@@ -53,13 +53,13 @@ export default {
       database: env("DB_DATABASE"),
     },
     migrations: {
-      directory: path.join(__dirname, '../Database/Migrations/'),
+      directory: path.join(__dirname, "../Database/Migrations/"),
       tableName: "migrations",
-      stub:  path.join(__dirname, '../Database/Migrations/migrationLayout.stub'),
-      extension: 'ts'
+      stub: path.join(__dirname, "../Database/Migrations/migrationLayout.stub"),
+      extension: "ts",
     },
     seeds: {
-      directory:  path.join(__dirname, '../Database/Seeds/'),
+      directory: path.join(__dirname, "../Database/Seeds/"),
     },
   },
   /*
@@ -83,7 +83,7 @@ export default {
     useNewUrlParser: env("DB_USENEWURLPARSER"),
     useUnifiedTopology: env("DB_USEUNIFIEDTOPOLOGY"),
     connection: {
-      connection_link: "mongodb+srv://alex:12345678900@cluster0.rk5yb.mongodb.net/attendance?retryWrites=true&w=majority",
+      connection_link: env("DB_CONNECTIONSTRING"),
     },
   },
 
