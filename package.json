@@ -43,6 +43,7 @@
     "expresswebjs-preset-ts": "^1.0.4",
     "log4js": "^6.3.0",
     "maker-console-ts": "^1.0.36",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.9",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",

@@ -6,6 +6,7 @@ import FormRequest from "Elucidate/Validator/FormRequest";
 import IPasswordResetService from "App/Service/PasswordReset/IPasswordResetService";
 import Hash from "Elucidate/Hashing/Hash";
 import PasswordResetRepository from "App/Repository/PasswordResetRepository";
+import moment from "moment";
 
 class ResetPasswordController {
   protected userService: IUserService;
@@ -47,13 +48,19 @@ class ResetPasswordController {
     const getUser = await this.passwordResetService.getUserByEmail(
       data["body"].email
     );
+    let hours = moment().diff(moment(getUser["data"].createdAt), "hours");
+    
+    if (hours > 1) {
+      return HttpResponse.BAD_REQUEST(res, {
+        error: true,
+        message: "Token Expired",
+      });
+    }
+
     let hash = await Hash.make(data["body"].password);
 
     if (getUser["data"].hash === data["body"].token) {
-      await this.userService.updateUserByEmail(
-        data["body"].email,
-        hash
-      );
+      await this.userService.updateUserByEmail(data["body"].email, hash);
 
       await new PasswordResetRepository().deleteWhere({
         email: data["body"].email,
