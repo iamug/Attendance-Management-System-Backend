@@ -1,6 +1,7 @@
 "use strict";
 import ShouldQueue from "expresswebcorets/lib/Queue/shoudQueue";
-import Mailer from '../Mailer'
+import Mailer from "../Mailer";
+import IEmail_job from "./IEmail_job";
 
 class EmailJob extends ShouldQueue {
   constructor() {
@@ -12,7 +13,7 @@ class EmailJob extends ShouldQueue {
    * Execute the job.
    * @return void
    */
-  handle(data: { body: string; client_name: string; sender_name: string; to: string; token: string; template: string; from: string; subject: string; }) {
+  handle(data: IEmail_job) {
     new Mailer().sendMailTransport(data);
   }
 }
